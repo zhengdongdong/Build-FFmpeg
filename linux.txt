@@ -1,0 +1,130 @@
+// 更新apt
+apt update
+
+// 安装vim(阿里云服务器默认有vim) sudo 超级用户
+sudo apt-get install vim-gtk
+// 配置环境变量
+
+// 使用vim编辑
+vim zdd.txt  // 这时是命令模式
+
+// 进入编辑模式
+i / shift i
+
+// 命令行模式 dd 删除一行, x 删除一个
+
+// 进入命令模式
+ESC
+
+// vim 退出(命令模式下)
+shift z z  保存退出
+:q  退出
+:q! 强制退出
+
+// 简单配置vim
+vim /etc/vim/vimrc
+set nu  设置行号
+set tabstop 设置制表符宽度
+set ruler  右下角显示光标位置
+set cursorline 高亮显示当前行
+
+//配置ndk
+cd /
+cd usr
+mkdir ndk
+//选择 XShell 新建文件传输打开 XFtp 找到 ndk 目录, 将 ndk~.bin 文件 上传上去(或者直接在 linux 上下载)
+
+// 解压ndk
+// 给权限(省事给所有权限)
+chmod 777 -R ndk 给ndk目录(子) 具有777权限(最高权限)
+// 解压
+./ndk~.bin
+// 安装nkd
+// 环境变量配置 ~ 表示root
+vim ~/.bashrc
+// 在最后
+export NDKROOT=/usr/ndk/android-ndk-r10e
+export PATH=$NDKROOT:$PATH
+// 保存退出后 更新环境变量
+source ~/.bashrc 
+// 查看
+ndk-build -v
+
+
+// ffmpeg 配置
+cd /usr
+mkdir dd
+// 将下载的 ffmpeg 上传到 dd文件夹中
+// 安装zip
+sodu apt-get install zip
+// 解压 
+// tar  -z 有gzip属性的, -x 解压 -f 使用档案名字,这个参数是最后一个参数,后只能接文件名 -c 新建 -t 查看 -r 向压缩文档末尾追加文件 ...
+unzip ffmpeg.zip  /  tar -zxf ffmpeg.tar.gz
+
+// 编译
+shell脚本文件
+(windows下编辑时注意编码 utf-8 无bom格式, 在linix内用命令转为linux格式: dos2unix 文件名)
+
+bulid-android.sh 文件
+NDK=  这个是ndk所在目录, 一般只需要改这个就可以了
+CPU= arm 如需要, 这里cpu类型可改
+
+disalbe 不编译内容
+enable 编译内容
+./configure 执行脚本文件
+/*********************************************/
+#!/bin/bash
+make clean
+export NDK=/usr/ndk/android-ndk-r10e
+export SYSROOT=$NDK/platforms/android-9/arch-arm/
+export TOOLCHAIN=$NDK/toolchains/arm-linux-androideabi-4.8/prebuilt/linux-x86_64
+export CPU=arm
+export PREFIX=$(pwd)/android/$CPU
+export ADDI_CFLAGS="-marm"
+
+./configure --target-os=linux \
+--prefix=$PREFIX --arch=arm \
+--disable-doc \
+--enable-shared \
+--disable-static \
+--disable-yasm \
+--disable-symver \
+--enable-gpl \
+--disable-ffmpeg \
+--disable-ffplay \
+--disable-ffprobe \
+--disable-ffserver \
+--disable-doc \
+--disable-symver \
+--cross-prefix=$TOOLCHAIN/bin/arm-linux-androideabi- \
+--enable-cross-compile \
+--sysroot=$SYSROOT \
+--extra-cflags="-Os -fpic $ADDI_CFLAGS" \
+--extra-ldflags="$ADDI_LDFLAGS" \
+$ADDITIONAL_CONFIGURE_FLAG
+make clean
+make
+make install
+/*********************************************/
+
+// 给权限
+chmod 777 -R ffmpeg-2.6.9
+// 编译
+// 如果直接编译的话  会生成类似 libavdevice.so.56 这种带版本号的动态库, 这样的库, 安卓无法直接使用
+修改
+SLIBNAME_WITH_MAJOR='$(SLIBNAME).$(LIBMAJOR)'
+LIB_INSTALL_EXTRA_CMD='$$(RANLIB) "$(LIBDIR)/$(LIBNAME)"'
+SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'
+SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR) $(SLIBNAME)'
+为
+SLIBNAME_WITH_MAJOR='$(SLIBNAME)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'
+LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'
+SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'
+SLIB_INSTALL_LINKS='$(SLIBNAME)'
+
+// 完成后执行
+./build-android.sh
+
+
+
+
