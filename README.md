@@ -1,24 +1,5 @@
 # Build-FFmpeg
 
-下载地址: ffmpeg.org ->  点击Download -> Get the packages 找到对应平台进行下载, 这里下载 windows-build
+Windows 疏通编译流程, 简单输出了一下
 
-其中 static 是编译好的可以直接使用
-     dev 是头文件/链接文件
-     shared 是需要的动态库
-
-1.将 ffmpeg-dev 下的 <include> / <lib> 文件夹拷贝到 vs 项目目录下
-
-2.将 ffmpeg-shared/bin 目录下的的动态库(windows 下是 dll 文件)
-
-3.配置 Visual Studio
-
-选择项目右键 -> 属性 -> C/C++ -> 附加包含目录 -> 选择 include 文件夹(这样做是为了能有代码提示)
-
-选择项目右键 -> 属性 -> 链接器 -> 常规 -> 附加库目录 -> 选择 lib 文件夹 
-
-选择项目右键 -> 属性 -> 链接器 -> 输入 -> 附加依赖项 -> 将 dll 文件都写进去(注意后缀名是lib)
-
-
-4.配置环境为 x64 (这里下载的是64位, 如果是32位, 跳过)
-
-5.创建cpp文件 输出配置文件进行测试
+Linux 记录在 Linux 中的编译流程, 夹杂了一些linux知识
