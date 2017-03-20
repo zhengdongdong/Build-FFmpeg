@@ -1,3 +1,5 @@
+configure 文件很重要, 编译时可以好好看下, 里面说明很详细
+
 // 更新apt
 apt update
 
@@ -69,9 +71,15 @@ bulid-android.sh 文件
 NDK=  这个是ndk所在目录, 一般只需要改这个就可以了
 CPU= arm 如需要, 这里cpu类型可改
 
+bulid-android.sh -> 执行 ./configure -> 生成 config.mak , config.h 和其他等文件
+
+ffmpeg 主要有8大模块, 可选择需要的编译
 disalbe 不编译内容
 enable 编译内容
 ./configure 执行脚本文件
+
+注意:SYSROOT=$NDK/platforms/android-9/arch-arm/  这里的 android-9 版本号会产生坑(Android编译版本和这里的版本不兼容)
+
 /*********************************************/
 #!/bin/bash
 make clean
@@ -117,7 +125,7 @@ LIB_INSTALL_EXTRA_CMD='$$(RANLIB) "$(LIBDIR)/$(LIBNAME)"'
 SLIB_INSTALL_NAME='$(SLIBNAME_WITH_VERSION)'
 SLIB_INSTALL_LINKS='$(SLIBNAME_WITH_MAJOR) $(SLIBNAME)'
 为
-SLIBNAME_WITH_MAJOR='$(SLIBNAME)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'
+SLIBNAME_WITH_MAJOR='$(SLIBPREF)$(FULLNAME)-$(LIBMAJOR)$(SLIBSUF)'
 LIB_INSTALL_EXTRA_CMD='$$(RANLIB)"$(LIBDIR)/$(LIBNAME)"'
 SLIB_INSTALL_NAME='$(SLIBNAME_WITH_MAJOR)'
 SLIB_INSTALL_LINKS='$(SLIBNAME)'
@@ -125,6 +133,13 @@ SLIB_INSTALL_LINKS='$(SLIBNAME)'
 // 完成后执行
 ./build-android.sh
 
+android 目录即编译好的文件可以拷贝出来使用
 
-
+测试:
+创建项目 -> 把 include 目录复制到 jni  
+		 -> 把 大版本号(带数字的).so复制到 jni
+		 -> 创建工具类, javah 生成头文件, 再复制到 jni
+		 -> Add Native Support
+		 -> 配置 mk 文件
+		 -> 编写 .c 文件
 
