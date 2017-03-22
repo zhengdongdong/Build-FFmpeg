@@ -78,7 +78,7 @@ disalbe 不编译内容
 enable 编译内容
 ./configure 执行脚本文件
 
-注意:SYSROOT=$NDK/platforms/android-9/arch-arm/  这里的 android-9 版本号会产生坑(Android编译版本和这里的版本不兼容)
+注意:SYSROOT=$NDK/platforms/android-9/arch-arm/  这里的 android-9 版本号会产生坑(Android编译版本和这里的版本不兼容), 也是根据 cpu 类型决定版本
 
 /*********************************************/
 #!/bin/bash
