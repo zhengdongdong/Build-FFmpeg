@@ -1,17 +1,14 @@
 # Build-FFmpeg
----
 
 Windows 疏通编译流程, 简单输出了一下
 
 Linux 记录在 Linux 中的编译流程, 夹杂了一些linux知识, 最后创建了一个安卓应用试运行一下
 
 # FFmpeg
----
 
 FFmpeg 包含了很多优秀的算法, 可以提取出来单独使用
 
-##FFmpeg 一共包含8个库:
----
+## FFmpeg 一共包含8个库:
 
 >不需要的编译时可以 disable 掉(avdevice, postproc 等可以去掉)
 >因为 avcodec 中包含了很多编解码方式, 所以包会比较大, 这时也可以 disable-encoder=NAME 和 disable-decoder=NAME
@@ -28,28 +25,27 @@ FFmpeg 包含了很多优秀的算法, 可以提取出来单独使用
 
 这里主要用到 avcodec, avformat, avutil, swscale
 
-##FFmpeg 解码流程 -- 解码过程是一帧一帧的读取处理
----
+## FFmpeg 解码流程 -- 解码过程是一帧一帧的读取处理
 
 >流程只是一般流程, 解码器也可以直接指定不进行查找
 
---> av_register_all() 注册所有组件(这里是全部注册, 实际用到哪个注册哪个即可)
---> avformat_open_input() 打开输入视频文件
---> avformat_find_stream_ino() 获取视频文件信息
---> avcodec_find_decoder() 查找解码器
---> avcodec_open2() 打开解码器
---> av_read_frame() 从输入文件读取一帧压缩数据, 这里进入循环, 读取不到结束循环
---> 循环 --> AVPacket 数据封装包
-         --> avcodec_decode_video2() 解码一帧压缩数据
-         --> AVFrame 像素数据
-         --> Show On Screen..  
---> 直到 false
---> close
-    --> avcodec_close() 关闭解码器
-	--> avformat_close_input() 关闭输入视频文件 
+* --> av_register_all() 注册所有组件(这里是全部注册, 实际用到哪个注册哪个即可)
+* --> avformat_open_input() 打开输入视频文件
+* --> avformat_find_stream_ino() 获取视频文件信息
+* --> avcodec_find_decoder() 查找解码器
+* --> avcodec_open2() 打开解码器
+* --> av_read_frame() 从输入文件读取一帧压缩数据, 这里进入循环, 读取不到结束循环
+* --> 循环 --> AVPacket 数据封装包
+*	 --> avcodec_decode_video2() 解码一帧压缩数据
+*        --> AVFrame 像素数据
+*        --> Show On Screen..  
+* --> 直到 false
+* --> close
+* 	--> avcodec_close() 关闭解码器
+* 	--> avformat_close_input() 关闭输入视频文件 
+	
 
 # FFmpeg 示例
----
 
 >在 ffmpeg 源码 -> doc -> examples 中查看示例 或者 Linux 中查看 c 代码
 
