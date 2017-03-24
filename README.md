@@ -99,14 +99,28 @@ void deal(JNIEnv *env, jclass jcls, jstring input_jstr, jstring output_jstr){
 						// 6. 读取压缩的视频数据 AVPacket
 
 						// 压缩数据
-						AVPacket *packet;
+						AVPacket *packet = av_malloc(sizeof(AVPacket));
 						av_init_packet(packet);
 
 						// 像素数据
 						AVFrame *frame = av_frame_alloc();
+						AVFrame *yuvFrame = av_frame_alloc();
+
+						//只有指定了AVFrame的像素格式、画面大小才能真正分配内存
+						//缓冲区分配内存
+						uint8_t *out_buffer = (uint8_t *)av_malloc(avpicture_get_size(AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height));
+						//初始化缓冲区
+						avpicture_fill((AVPicture *)yuvFrame, out_buffer, AV_PIX_FMT_YUV420P, codecContext->width, codecContext->height);
 						
 						// 输出文件
 						FILE *fp_yuv = fopen(output_cstr, "wb");
+						
+						// 使用这个进行缩放
+						struct SwsContext *sws_ctx = sws_gettContext(
+								codecContext->width, codecContext->height,  codecContext->pix_fmt,
+								codecContext->width, codecContext->height,  AV_PIX_FMT_YUV420P,
+								SWS_BILINEAR, NULL, NULL, NULL
+							);
 
 						int len = 0;
 						int got_frame;
@@ -117,14 +131,26 @@ void deal(JNIEnv *env, jclass jcls, jstring input_jstr, jstring output_jstr){
 							// 0 代表没有下一帧, 解码完成, 非 0 代表正在解码
 							if(got_frame){
 								// 解码中
+
+								// 转为 指定的 420p像素帧
+								sws_scale(
+									sws_ctx, 
+									frame->data, 
+									frame->linesize, 
+									0, 
+									frame->height, 
+									yuvFrame->data,
+									yuvFrame->linesize
+									);
+
 								// 向YUV文件保存解码之后的帧数据
 								// AVFrame->YUV
 								// 一个像素包含一个Y
 								int y_size = codecContext->width * codecContext->height;
 								// y:u:v 比例 4:1:1
-								fwrite(frame->data[0], 1, y_size, fp_yuv); // y
-								fwrite(frame->data[1], 1, y_size/4, fp_yuv); // u
-								fwrite(frame->data[2], 1, y_size/4, fp_yuv); // v
+								fwrite(yuvFrame->data[0], 1, y_size, fp_yuv); // y
+								fwrite(yuvFrame->data[1], 1, y_size/4, fp_yuv); // u
+								fwrite(yuvFrame->data[2], 1, y_size/4, fp_yuv); // v
 
 								// 释放
 							} else {
