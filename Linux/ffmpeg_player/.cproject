@@ -27,6 +27,11 @@
 								</outputEntries>
 							</builder>
 							<tool id="com.android.gcc.compiler.199075294" name="Android GCC Compiler" superClass="com.android.gcc.compiler">
+								<option id="com.android.gcc.option.includePath.987823544" superClass="com.android.gcc.option.includePath" valueType="includePath">
+									<listOptionValue builtIn="false" value="&quot;E:\ZZDevelop\ndk\android-ndk-r11c\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.9\include&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;E:\ZZDevelop\ndk\android-ndk-r11c\toolchains\arm-linux-androideabi-4.9\prebuilt\windows-x86_64\lib\gcc\arm-linux-androideabi\4.9\include-fixed&quot;"/>
+									<listOptionValue builtIn="false" value="&quot;E:\ZZDevelop\ndk\android-ndk-r11c\platforms\android-18\arch-arm\usr\include&quot;"/>
+								</option>
 								<inputType id="com.android.gcc.inputType.2087322245" superClass="com.android.gcc.inputType"/>
 							</tool>
 						</toolChain>
@@ -49,4 +54,5 @@
 			<autodiscovery enabled="true" problemReportingEnabled="true" selectedProfileId="com.android.AndroidPerProjectProfile"/>
 		</scannerConfigBuildInfo>
 	</storageModule>
+	<storageModule moduleId="refreshScope"/>
 </cproject>

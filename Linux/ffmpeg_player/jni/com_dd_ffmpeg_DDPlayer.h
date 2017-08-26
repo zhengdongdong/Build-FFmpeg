@@ -7,9 +7,21 @@
 #ifdef __cplusplus
 extern "C" {
 #endif
-
+/*
+ * Class:     com_dd_ffmpeg_DDPlayer
+ * Method:    play
+ * Signature: (Ljava/lang/String;)V
+ */
 JNIEXPORT void JNICALL Java_com_dd_ffmpeg_DDPlayer_play
   (JNIEnv *, jobject, jstring, jobject);
+
+/*
+ * Class:     com_dd_ffmpeg_DDPlayer
+ * Method:    stop
+ * Signature: ()V
+ */
+JNIEXPORT void JNICALL Java_com_dd_ffmpeg_DDPlayer_stop
+  (JNIEnv *, jobject);
 
 #ifdef __cplusplus
 }
